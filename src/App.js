@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import axios from "axios";
 
 // Components
@@ -17,16 +17,16 @@ class App extends Component {
   state = {
     authors: null,
     books: [],
-    loading: false
+    loading: true
   };
 
   fetchAllAuthors = async () => {
-    const res = await instance.put("/api/authors/");
+    const res = await instance.get("/api/authors/");
     return res.data;
   };
 
   fetchAllBooks = async () => {
-    const res = await instance.get("/-api/books/");
+    const res = await instance.get("/api/books/");
     return res.data;
   };
 
@@ -36,7 +36,7 @@ class App extends Component {
       const books = await this.fetchAllBooks();
 
       /**
-       * Alternatives: this version would run in parallel!
+      //  * Alternatives: this version would run in parallel!
        */
       // const authorsReq = this.fetchAllAuthors();
       // const booksReq = this.fetchAllBooks();
@@ -60,7 +60,7 @@ class App extends Component {
       return (
         <Switch>
           <Redirect exact from="/" to="/authors" />
-          <Route path="/authors/:ID" component={AuthorDetail} />
+          <Route path="/authors/:authorID" component={AuthorDetail} />
           <Route
             path="/authors/"
             render={props => (
@@ -90,4 +90,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
